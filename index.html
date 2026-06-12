@@ -2,60 +2,242 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>Kahoot Inicio</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trivia</title>
 
 <style>
 
-body{
+*{
 margin:0;
-font-family:Arial;
-background:linear-gradient(135deg,#46178f,#e21b3c);
+padding:0;
+box-sizing:border-box;
+font-family:Arial,Helvetica,sans-serif;
+}
+
+body{
+
 height:100vh;
 display:flex;
-align-items:center;
 justify-content:center;
-color:white;
+align-items:center;
+background:
+linear-gradient(135deg,#46178f 0%,#7b1fa2 45%,#e21b3c 100%);
+overflow:hidden;
+
 }
 
-/* TARJETA CENTRADA */
+/* Fondo decorativo */
+
+body::before{
+
+content:"";
+position:absolute;
+width:700px;
+height:700px;
+border-radius:50%;
+background:rgba(255,255,255,.05);
+top:-250px;
+right:-250px;
+
+}
+
+body::after{
+
+content:"";
+position:absolute;
+width:600px;
+height:600px;
+border-radius:50%;
+background:rgba(255,255,255,.04);
+bottom:-220px;
+left:-220px;
+
+}
+
+/* Tarjeta */
+
 .card{
-text-align:center;
+
+position:relative;
+z-index:2;
+
 width:90%;
-max-width:420px;
+max-width:470px;
+
+padding:45px;
+
+border-radius:24px;
+
+background:rgba(255,255,255,.12);
+
+backdrop-filter:blur(18px);
+
+box-shadow:
+0 20px 60px rgba(0,0,0,.35);
+
 display:flex;
 flex-direction:column;
-gap:15px;
+align-items:center;
+
+animation:fade .6s ease;
+
 }
 
-/* TITULO */
+@keyframes fade{
+
+from{
+opacity:0;
+transform:translateY(25px);
+}
+
+to{
+opacity:1;
+transform:translateY(0);
+}
+
+}
+
+.logo{
+
+font-size:60px;
+margin-bottom:15px;
+
+}
+
 h1{
-font-size:34px;
-margin:0;
+
+color:white;
+font-size:46px;
+font-weight:900;
+letter-spacing:1px;
+
 }
 
-/* INPUT */
-input{
-padding:15px;
-border:none;
-border-radius:10px;
+.sub{
+
+margin-top:10px;
+margin-bottom:30px;
+
+color:#F4F4F4;
 font-size:18px;
 text-align:center;
+line-height:1.5;
+
 }
 
-/* BOTON */
+/* Input */
+
+input{
+
+width:100%;
+
+padding:18px;
+
+border-radius:14px;
+
+border:3px solid transparent;
+
+font-size:19px;
+
+outline:none;
+
+transition:.25s;
+
+text-align:center;
+
+}
+
+input:focus{
+
+border-color:#FFD54F;
+
+}
+
+.errorInput{
+
+border-color:#ff5252 !important;
+
+}
+
+#error{
+
+width:100%;
+min-height:22px;
+
+margin-top:10px;
+
+font-size:15px;
+
+font-weight:bold;
+
+color:#FFD6D6;
+
+opacity:0;
+
+transition:.25s;
+
+text-align:center;
+
+}
+
+#error.show{
+
+opacity:1;
+
+}
+
+/* Botón */
+
 button{
-padding:15px;
+
+margin-top:18px;
+
+width:100%;
+
+padding:18px;
+
 border:none;
-border-radius:10px;
-font-size:18px;
-cursor:pointer;
-background:black;
+
+border-radius:14px;
+
+background:#111;
+
 color:white;
-transition:0.2s;
+
+font-size:21px;
+
+font-weight:bold;
+
+cursor:pointer;
+
+transition:.2s;
+
+}
+
+button:hover{
+
+transform:translateY(-3px);
+
+box-shadow:0 12px 25px rgba(0,0,0,.35);
+
 }
 
 button:active{
-transform:scale(0.97);
+
+transform:scale(.98);
+
+}
+
+.footer{
+
+margin-top:25px;
+
+font-size:13px;
+
+opacity:.8;
+
+color:white;
+
 }
 
 </style>
@@ -65,26 +247,82 @@ transform:scale(0.97);
 
 <div class="card">
 
-<h1>🎮 KAHOOT PRO</h1>
+<div class="logo">🧠</div>
 
-<input id="nombre" placeholder="Nombre completo">
+<h1>TRIVIA</h1>
 
-<button onclick="start()">Empezar</button>
+<div class="sub">
+
+Pon a prueba tus conocimientos.<br>
+Ingresa tus nombres y apellidos para comenzar.
+
+</div>
+
+<input
+id="nombre"
+type="text"
+placeholder="Nombres y apellidos"
+maxlength="80"
+autocomplete="off"
+>
+
+<div id="error"></div>
+
+<button onclick="start()">
+COMENZAR
+</button>
+
+<div class="footer">
+¡Muchos éxitos!
+</div>
 
 </div>
 
 <script>
 
-function start(){
+const input=document.getElementById("nombre");
+const error=document.getElementById("error");
 
-let nombre=document.getElementById("nombre").value;
+input.addEventListener("input",()=>{
 
-if(!nombre){
-alert("Ingresa tu nombre");
-return;
+let texto=input.value.replace(/\s+/g," ").trimStart();
+
+input.value=texto;
+
+if(texto.split(" ").filter(x=>x).length>=2){
+
+error.classList.remove("show");
+input.classList.remove("errorInput");
+
 }
 
-/* PASA AL JUEGO */
+});
+
+input.addEventListener("keydown",(e)=>{
+
+if(e.key==="Enter"){
+
+start();
+
+}
+
+});
+
+function start(){
+
+let nombre=input.value.trim().replace(/\s+/g," ");
+
+if(nombre.split(" ").filter(x=>x).length<2){
+
+error.innerHTML="⚠️ Por favor ingresa tus nombres y apellidos.";
+error.classList.add("show");
+input.classList.add("errorInput");
+input.focus();
+
+return;
+
+}
+
 window.location.href="game.html?nombre="+encodeURIComponent(nombre);
 
 }
