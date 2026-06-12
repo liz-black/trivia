@@ -71,6 +71,27 @@ options.appendChild(d);
 startTimer();
 }
 
+async function guardarResultado() {
+
+    const datos = new FormData();
+
+    datos.append("nombre", nombreAlumno);
+    datos.append("puntaje", puntaje);
+
+    try {
+
+        await fetch(SCRIPT_URL, {
+            method: "POST",
+            mode: "no-cors",
+            body: datos
+        });
+
+    } catch(e) {
+        console.log(e);
+    }
+
+}
+
 async function next(){
 
     index++;
@@ -90,31 +111,6 @@ async function next(){
             <div style="font-size:70px;font-weight:bold;color:#FFD54F;">
                 ${puntaje}
             </div>
-        </div>
-        `;
-
-    }
-
-}
-
-async function next(){
-
-    index++;
-
-    if(index<preguntas.length){
-
-        loadQuestion();
-
-    }else{
-
-        await guardarResultado();
-
-        document.body.innerHTML=`
-        <div style="height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center">
-            <h1>🎉 ¡Terminaste!</h1>
-            <h2>${nombreAlumno}</h2>
-            <p>Puntaje final</p>
-            <div style="font-size:72px;font-weight:bold;color:#FFD54F">${puntaje}</div>
         </div>
         `;
 
