@@ -71,19 +71,28 @@ options.appendChild(d);
 startTimer();
 }
 
-async function guardarResultado(){
-try{
-await fetch(SCRIPT_URL,{
-method:"POST",
-headers:{"Content-Type":"application/json"},
-body:JSON.stringify({
-nombre:nombreAlumno,
-puntaje:puntaje
-})
-});
-}catch(e){
-console.error(e);
-}
+async function guardarResultado() {
+
+    const datos = new URLSearchParams();
+
+    datos.append("nombre", nombreAlumno);
+    datos.append("puntaje", puntaje);
+
+    try{
+
+        await fetch(SCRIPT_URL,{
+            method:"POST",
+            body:datos
+        });
+
+        console.log("Guardado");
+
+    }catch(e){
+
+        console.error(e);
+
+    }
+
 }
 
 function next(){
