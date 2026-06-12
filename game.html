@@ -71,27 +71,30 @@ options.appendChild(d);
 startTimer();
 }
 
-async function guardarResultado() {
+function guardarResultado() {
 
-    const datos = new URLSearchParams();
+    const form = document.createElement("form");
 
-    datos.append("nombre", nombreAlumno);
-    datos.append("puntaje", puntaje);
+    form.method = "POST";
+    form.action = SCRIPT_URL;
+    form.target = "hiddenFrame";
 
-    try{
+    form.style.display = "none";
 
-        await fetch(SCRIPT_URL,{
-            method:"POST",
-            body:datos
-        });
+    const nombre = document.createElement("input");
+    nombre.name = "nombre";
+    nombre.value = nombreAlumno;
 
-        console.log("Guardado");
+    const puntajeInput = document.createElement("input");
+    puntajeInput.name = "puntaje";
+    puntajeInput.value = puntaje;
 
-    }catch(e){
+    form.appendChild(nombre);
+    form.appendChild(puntajeInput);
 
-        console.error(e);
+    document.body.appendChild(form);
 
-    }
+    form.submit();
 
 }
 
@@ -110,5 +113,6 @@ document.body.innerHTML=`<div style="height:100vh;display:flex;flex-direction:co
 }
 }
 </script>
+<iframe name="hiddenFrame" style="display:none;"></iframe>
 </body>
 </html>
