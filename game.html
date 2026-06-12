@@ -71,23 +71,28 @@ options.appendChild(d);
 startTimer();
 }
 
-async function guardarResultado() {
+async function next(){
 
-    const datos = new FormData();
+    index++;
 
-    datos.append("nombre", nombreAlumno);
-    datos.append("puntaje", puntaje);
+    if(index < preguntas.length){
 
-    try {
+        loadQuestion();
 
-        await fetch(SCRIPT_URL, {
-            method: "POST",
-            mode: "no-cors",
-            body: datos
-        });
+    }else{
 
-    } catch(e) {
-        console.log(e);
+        await guardarResultado();
+
+        document.body.innerHTML = `
+        <div style="height:100vh;display:flex;justify-content:center;align-items:center;flex-direction:column;">
+            <h1>🎉 ¡Terminaste!</h1>
+            <h2>${nombreAlumno}</h2>
+            <div style="font-size:70px;font-weight:bold;color:#FFD54F;">
+                ${puntaje}
+            </div>
+        </div>
+        `;
+
     }
 
 }
