@@ -92,19 +92,19 @@ async function guardarResultado() {
 
 }
 
-async function next(){
+function next(){
 
     index++;
 
-    if(index < preguntas.length){
+    if(index<preguntas.length){
 
         loadQuestion();
 
     }else{
 
-        await guardarResultado();
+        guardarResultado(); // NO ESPERA
 
-        document.body.innerHTML = `
+        document.body.innerHTML=`
         <div style="height:100vh;display:flex;justify-content:center;align-items:center;flex-direction:column;">
             <h1>🎉 ¡Terminaste!</h1>
             <h2>${nombreAlumno}</h2>
