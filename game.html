@@ -71,34 +71,28 @@ options.appendChild(d);
 startTimer();
 }
 
-function guardarResultado() {
+async function guardarResultado() {
 
-    const form = document.createElement("form");
+    const datos = new FormData();
 
-    form.method = "POST";
-    form.action = SCRIPT_URL;
-    form.target = "hiddenFrame";
+    datos.append("nombre", nombreAlumno);
+    datos.append("puntaje", puntaje);
 
-    form.style.display = "none";
+    try {
 
-    const nombre = document.createElement("input");
-    nombre.name = "nombre";
-    nombre.value = nombreAlumno;
+        await fetch(SCRIPT_URL, {
+            method: "POST",
+            mode: "no-cors",
+            body: datos
+        });
 
-    const puntajeInput = document.createElement("input");
-    puntajeInput.name = "puntaje";
-    puntajeInput.value = puntaje;
-
-    form.appendChild(nombre);
-    form.appendChild(puntajeInput);
-
-    document.body.appendChild(form);
-
-    form.submit();
+    } catch(e) {
+        console.log(e);
+    }
 
 }
 
-function next(){
+async function next(){
 
     index++;
 
@@ -108,20 +102,16 @@ function next(){
 
     }else{
 
-        guardarResultado();
+        await guardarResultado();
 
-        setTimeout(()=>{
-
-            document.body.innerHTML=`
-            <div style="height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center">
-                <h1>🎉 ¡Terminaste!</h1>
-                <h2>${nombreAlumno}</h2>
-                <p>Puntaje final</p>
-                <div style="font-size:72px;font-weight:bold;color:#FFD54F">${puntaje}</div>
-            </div>
-            `;
-
-        },2000); // Espera 2 segundos antes de cambiar la pantalla
+        document.body.innerHTML=`
+        <div style="height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center">
+            <h1>🎉 ¡Terminaste!</h1>
+            <h2>${nombreAlumno}</h2>
+            <p>Puntaje final</p>
+            <div style="font-size:72px;font-weight:bold;color:#FFD54F">${puntaje}</div>
+        </div>
+        `;
 
     }
 
