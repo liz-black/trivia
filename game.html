@@ -99,19 +99,34 @@ function guardarResultado() {
 }
 
 function next(){
-index++;
-if(index<preguntas.length){
-loadQuestion();
-}else{
-guardarResultado();
-document.body.innerHTML=`<div style="height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center">
-<h1>🎉 ¡Terminaste!</h1>
-<h2>${nombreAlumno}</h2>
-<p>Puntaje final</p>
-<div style="font-size:72px;font-weight:bold;color:#FFD54F">${puntaje}</div>
-</div>`;
+
+    index++;
+
+    if(index<preguntas.length){
+
+        loadQuestion();
+
+    }else{
+
+        guardarResultado();
+
+        setTimeout(()=>{
+
+            document.body.innerHTML=`
+            <div style="height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center">
+                <h1>🎉 ¡Terminaste!</h1>
+                <h2>${nombreAlumno}</h2>
+                <p>Puntaje final</p>
+                <div style="font-size:72px;font-weight:bold;color:#FFD54F">${puntaje}</div>
+            </div>
+            `;
+
+        },2000); // Espera 2 segundos antes de cambiar la pantalla
+
+    }
+
 }
-}
+    
 </script>
 <iframe name="hiddenFrame" style="display:none;"></iframe>
 </body>
