@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Kahoot Inicio</title>
+
+<style>
+
+body{
+margin:0;
+font-family:Arial;
+background:linear-gradient(135deg,#46178f,#e21b3c);
+height:100vh;
+display:flex;
+align-items:center;
+justify-content:center;
+color:white;
+}
+
+/* TARJETA CENTRADA */
+.card{
+text-align:center;
+width:90%;
+max-width:420px;
+display:flex;
+flex-direction:column;
+gap:15px;
+}
+
+/* TITULO */
+h1{
+font-size:34px;
+margin:0;
+}
+
+/* INPUT */
+input{
+padding:15px;
+border:none;
+border-radius:10px;
+font-size:18px;
+text-align:center;
+}
+
+/* BOTON */
+button{
+padding:15px;
+border:none;
+border-radius:10px;
+font-size:18px;
+cursor:pointer;
+background:black;
+color:white;
+transition:0.2s;
+}
+
+button:active{
+transform:scale(0.97);
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="card">
+
+<h1>🎮 KAHOOT PRO</h1>
+
+<input id="nombre" placeholder="Nombre completo">
+
+<button onclick="start()">Empezar</button>
+
+</div>
+
+<script>
+
+function start(){
+
+let nombre=document.getElementById("nombre").value;
+
+if(!nombre){
+alert("Ingresa tu nombre");
+return;
+}
+
+/* PASA AL JUEGO */
+window.location.href="game.html?nombre="+encodeURIComponent(nombre);
+
+}
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trivia</title>
+<style>
+body{margin:0;font-family:Arial,sans-serif;background:linear-gradient(135deg,#46178f,#e21b3c);color:#fff;height:100vh;overflow:hidden}
+.timer{position:absolute;top:10px;right:15px;font-size:22px;font-weight:bold;background:rgba(0,0,0,.3);padding:8px 14px;border-radius:20px}
+.container{height:100vh;display:flex;flex-direction:column}
+.content{margin-top:auto;display:flex;flex-direction:column;align-items:center;gap:4px;padding-bottom:4px}
+img{width:96%;max-width:850px;height:320px;border-radius:16px;object-fit:cover;display:block;margin:0 auto 12px;box-shadow:0 4px 20px rgba(0,0,0,.25)}
+.question{font-size:34px;font-weight:bold;text-align:center;margin:12px 10px 2px}
+.options{height:48vh;width:100%;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:8px;padding:10px;box-sizing:border-box}
+.option{display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:bold;border-radius:16px;cursor:pointer}
+.red{background:#e21b3c} .blue{background:#1368ce} .green{background:#26890c} .yellow{background:#e9b000;color:#000}
+</style>
+</head>
+<body>
+<div class="timer" id="timer">10</div>
+<div class="container">
+<div class="content">
+<img id="img">
+<div class="question" id="question"></div>
+</div>
+<div class="options" id="options"></div>
+</div>
+
+<script>
+const SCRIPT_URL="https://script.google.com/macros/s/AKfycbycLtK8h9V2rIVAWZ-YzwI7uqwu-kEEQKneM4s6DfRRKGLifqtI9gLicj0EjjjRfQxdug/exec";
+const params=new URLSearchParams(location.search);
+const nombreAlumno=params.get("nombre")||"Sin nombre";
+
+const preguntas=[{
+texto:"¿Capital del Perú?",
+img:"https://www.bestandestravel.com/wp-content/uploads/2019/09/lima-capital-of-peru.jpg",
+opciones:["Lima","Cusco","Arequipa","Piura"],
+correcta:0
+}];
+
+let index=0,puntaje=0,tiempo=10,interval;
+loadQuestion();
+
+function startTimer(){
+clearInterval(interval);
+tiempo=10;
+timer.textContent=tiempo;
+interval=setInterval(()=>{
+tiempo--;
+timer.textContent=tiempo;
+if(tiempo<=0){clearInterval(interval);next();}
+},1000);
+}
+
+function loadQuestion(){
+const p=preguntas[index];
+img.src=p.img;
+question.textContent=p.texto;
+options.innerHTML="";
+["red","blue","green","yellow"].forEach((c,i)=>{
+const d=document.createElement("div");
+d.className="option "+c;
+d.textContent=p.opciones[i];
+d.onclick=()=>{
+clearInterval(interval);
+if(i===p.correcta) puntaje+=tiempo*100;
+next();
+};
+options.appendChild(d);
+});
+startTimer();
+}
+
+async function guardarResultado(){
+try{
+await fetch(SCRIPT_URL,{
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify({
+nombre:nombreAlumno,
+puntaje:puntaje
+})
+});
+}catch(e){
+console.error(e);
+}
+}
+
+function next(){
+index++;
+if(index<preguntas.length){
+loadQuestion();
+}else{
+guardarResultado();
+document.body.innerHTML=`<div style="height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center">
+<h1>🎉 ¡Terminaste!</h1>
+<h2>${nombreAlumno}</h2>
+<p>Puntaje final</p>
+<div style="font-size:72px;font-weight:bold;color:#FFD54F">${puntaje}</div>
+</div>`;
+}
+}
+</script>
+</body>
+</html>
